@@ -10,13 +10,9 @@ builder.Services.AddCors(options =>
         name: "AllowAllOrigins",
             configurePolicy: policy =>
             {
-                //policy.AllowAnyOrigin()
-                //    .AllowAnyHeader()
-                //    .AllowAnyMethod();
-                policy.WithOrigins("http://localhost:4200")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+                policy.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
             });
 });
 
@@ -30,6 +26,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors("AllowAllOrigins");
+
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
@@ -42,7 +40,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.UseCors("AllowAllOrigins");
 
 app.Run();

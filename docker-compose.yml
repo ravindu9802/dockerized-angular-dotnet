@@ -1,17 +1,16 @@
 services:
   frontend:
-    image: angular-nodejs
+    image: angular-nodejs:latest
     build: 
       context: ./angular-app
       dockerfile: ./Dockerfile
     ports:
       - 4200:80
   backend:
-    image: dotnet-api
+    image: dotnet-api:latest    
     build:
       context: ./dotnet-crud-api
       dockerfile: ./Dockerfile
     ports:
-      - 7157:8080
-      - 7158:8081
-
+      - 5010:5000
+      - 5011:5001
