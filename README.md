@@ -1,7 +1,10 @@
+<b>Angular + .NET Core + Docker</b>
+
+</br>
 <b>References:</b>
 </br>
 </br>
-How to configure HTTPS on .Net 8
+How to configure HTTPS on .NET 8
 </br>
 https://learn.microsoft.com/en-us/aspnet/core/security/docker-https?view=aspnetcore-8.0
 </br>
