@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="card">
+    <div style="width: 100px; margin-left: 500px">
+      <button routerLink="/login">Logout</button>
+    </div>
+    <h4>Add New Todo</h4>
+    <form>
+      <input
+        type="text"
+        id="todo"
+        name="todo"
+        placeholder="Todo"
+        [(ngModel)]="todo"
+        required
+        style="width: 300px"
+      />
+      <button
+        *ngIf="!isEdit"
+        type="submit"
+        style="margin-left: 20px"
+        (click)="onAdd()"
+      >
+        Add
+      </button>
+      <button
+        *ngIf="isEdit"
+        type="submit"
+        style="margin-left: 20px"
+        (click)="onSave()"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="isEdit"
+        type="submit"
+        style="margin-left: 20px"
+        (click)="isEdit = false; todo = ''"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
+  <br />
+  <br />
+
+  <div class="card">
+    <h4>Todo List</h4>
+    <ul>
+      <li *ngFor="let t of todoList" id="{{ t.id }}" style="display: flex">
+        <p
+          [ngStyle]="{
+            width: '300px',
+            'text-decoration': t.isComplete ? 'line-through' : 'none'
+          }"
+        >
+          {{ t.name | titlecase }}
+        </p>
+
+        <div style="width: 100px">
+          <button *ngIf="!t.isComplete && !isEdit" (click)="toggleStatus(t)">
+            Complete
+          </button>
+          <button *ngIf="t.isComplete && !isEdit" (click)="toggleStatus(t)">
+            Incomplete
+          </button>
+        </div>
+        <div style="width: 50px">
+          <button *ngIf="!t.isComplete && !isEdit" (click)="onEdit(t)">
+            Edit
+          </button>
+        </div>
+        <div style="width: 100px">
+          <button *ngIf="!isEdit" (click)="onDelete(t.id)">Delete</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

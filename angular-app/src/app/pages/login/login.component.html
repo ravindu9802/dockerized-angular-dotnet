@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="card">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm">
+      <input
+        type="text"
+        id="email"
+        name="email"
+        placeholder="Email"
+        formControlName="email"
+        required
+      />
+      <div
+        class="col-12"
+        *ngIf="
+          loginForm.controls['email'].invalid &&
+          (loginForm.controls['email'].touched ||
+            loginForm.controls['email'].dirty)
+        "
+      >
+        <span
+          *ngIf="loginForm.controls['email'].errors?.['required']"
+          class="ng-invalid-feedback"
+          >Email is Required!</span
+        >
+        <span
+          *ngIf="loginForm.controls['email'].errors?.['email']"
+          class="ng-invalid-feedback"
+          >Invalid Email!</span
+        >
+      </div>
+
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        formControlName="password"
+        required
+      />
+      <div
+        class="col-12"
+        *ngIf="
+          loginForm.controls['password'].invalid &&
+          (loginForm.controls['password'].touched ||
+            loginForm.controls['password'].dirty)
+        "
+      >
+        <span
+          *ngIf="loginForm.controls['password'].errors?.['required']"
+          class="ng-invalid-feedback"
+          >Password is Required!</span
+        >
+        <span
+          *ngIf="loginForm.controls['password'].errors?.['minlength']"
+          class="ng-invalid-feedback"
+          >Minimum length: 5 characters!</span
+        >
+      </div>
+      <button type="submit" (click)="onSubmit()">Login</button>
+    </form>
+  </div>
+</div>
