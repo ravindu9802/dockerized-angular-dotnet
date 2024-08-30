@@ -7,10 +7,16 @@ services:
     ports:
       - 4200:80
   backend:
-    image: dotnet-api:latest    
+    image: dotnet-api:latest
     build:
       context: ./dotnet-crud-api
       dockerfile: ./Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=dotnet8
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/https/aspnetapp.pfx
     ports:
-      - 5010:5000
-      - 5011:5001
+      - 5000:80
+      - 5001:443
