@@ -1,6 +1,7 @@
 ﻿using dotnet_crud_api.Entities;
 using dotnet_crud_api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_crud_api.Controllers
 {
@@ -19,13 +20,13 @@ namespace dotnet_crud_api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Todo>> GetAllTodos()
         {
-            return Ok(_dbContext.Todos.ToArray());
+            return Ok(_dbContext.Todos.AsNoTracking().ToArray());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Todo> GetTodoById(int id)
         {
-            var todo = _dbContext.Todos.Find(id);
+            var todo = _dbContext.Todos.AsNoTracking().SingleOrDefault(t => t.Id == id);
             if (todo == null) return NotFound();
 
             return Ok(todo);

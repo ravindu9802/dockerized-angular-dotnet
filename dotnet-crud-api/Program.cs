@@ -1,5 +1,5 @@
+using dotnet_crud_api.Data;
 using dotnet_crud_api.Entities;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +20,19 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+// in-memory db
+// builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+
+// config SQLite as db
+builder.Services.AddSqlite<TodoDb>("Data Source=Todo.db");
+builder.Services.AddSqlite<PromotionsContext>("Data Source=Data/ReverseEngineering/Todo.db");
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+// use below servicce to seed the db
+app.CreateIfNotExist();
 
 app.UseCors("AllowAllOrigins");
 
