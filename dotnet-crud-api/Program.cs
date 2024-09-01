@@ -3,7 +3,7 @@ using dotnet_crud_api.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// setup CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -28,7 +28,13 @@ builder.Services.AddSwaggerGen();
 // builder.Services.AddSqlite<PromotionsContext>("Data Source=Data/ReverseEngineering/Todo.db");
 
 // SQL Server 2022
-var connStr = "Persist Security Info=False;Integrated Security=SSPI;database=tododb;server=(local);Encrypt=True;TrustServerCertificate=True;";
+// connection string for docker
+var connStr = builder.Configuration.GetConnectionString("TodoDbDocker");
+var password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
+connStr = string.Format(connStr, password);
+// connection string for local
+// var connStr = builder.Configuration.GetConnectionString("TodoDbLocal");
+Console.WriteLine(connStr);
 builder.Services.AddSqlServer<TodoDb>(connStr);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

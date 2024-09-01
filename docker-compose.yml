@@ -1,12 +1,19 @@
+version: '3.4'
+
+# networks:
+#   backend:
+
 services:
-  frontend:
+  frontend-service:
+    container_name: angular-nodejs-container
     image: angular-nodejs:latest
     build: 
       context: ./angular-app
       dockerfile: ./Dockerfile
     ports:
       - 4200:80
-  backend:
+  backend-service:
+    container_name: dotnet-api-container
     image: dotnet-api:latest
     build:
       context: ./dotnet-crud-api
@@ -17,6 +24,21 @@ services:
       - ASPNETCORE_HTTPS_PORT=5001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=dotnet8
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/https/aspnetapp.pfx
+      - MSSQL_SA_PASSWORD=P@55w0rd24
     ports:
       - 5000:80
       - 5001:443
+    depends_on:
+      - sqlserver-service
+    # networks:
+    #   - backend 
+  sqlserver-service:
+    container_name: sqlserver-container
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@55w0rd24
+    ports:
+      - 1433:1433
+    # networks:
+    #   - backend 
