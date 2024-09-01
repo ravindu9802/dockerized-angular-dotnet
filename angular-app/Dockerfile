@@ -1,6 +1,6 @@
 # STEP 1:
 # build angular app using production config
-FROM node:latest AS build
+FROM node:22.7.0-alpine AS build
 
 # define working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ RUN npm run build --configuration=production
 
 #STEP 2:
 # use nginx image to serve angular app
-FROM nginx:latest
+FROM nginx:1.27.1-alpine
 
 # copy .nginx config file to replace default nginx config
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
