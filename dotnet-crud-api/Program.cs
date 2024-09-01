@@ -23,9 +23,14 @@ builder.Services.AddSwaggerGen();
 // in-memory db
 // builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 
-// config SQLite as db
-builder.Services.AddSqlite<TodoDb>("Data Source=Todo.db");
-builder.Services.AddSqlite<PromotionsContext>("Data Source=Data/ReverseEngineering/Todo.db");
+// SQLite db
+// builder.Services.AddSqlite<TodoDb>("Data Source=Todo.db");
+// builder.Services.AddSqlite<PromotionsContext>("Data Source=Data/ReverseEngineering/Todo.db");
+
+// SQL Server 2022
+var connStr = "Persist Security Info=False;Integrated Security=SSPI;database=tododb;server=(local);Encrypt=True;TrustServerCertificate=True;";
+builder.Services.AddSqlServer<TodoDb>(connStr);
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 
