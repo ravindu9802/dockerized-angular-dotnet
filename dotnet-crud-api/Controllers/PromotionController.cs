@@ -9,13 +9,14 @@ namespace dotnet_crud_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class Promotion : ControllerBase
+    public class PromotionController : ControllerBase
     {
         private readonly PromotionsContext _context;
 
-        public Promotion(PromotionsContext promotionsContext)
+        public PromotionController(PromotionsContext promotionsContext)
         {
             _context = promotionsContext;
+            _context.Database.EnsureCreated();
         }
 
         [HttpGet]
