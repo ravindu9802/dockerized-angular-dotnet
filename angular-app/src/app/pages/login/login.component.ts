@@ -44,7 +44,7 @@ export class LoginComponent {
       this.authService.validateLogin(values.email, values.password).subscribe({
         next: (res: HttpResponse<any>) => {
           if (res.status == 200) {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl('/parent');
             localStorage.setItem('isLogged', 'TRUE');
           }
         },

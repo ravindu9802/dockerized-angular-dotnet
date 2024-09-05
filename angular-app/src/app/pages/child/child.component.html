@@ -2,15 +2,26 @@
   <div class="card">
     <div style="display: flex">
       <div style="width: 100px; margin-left: 500px">
-        <button routerLink="/child">Child Todos</button>
+        <button routerLink="/parent">Parent Todos</button>
       </div>
       <div style="width: 100px">
         <button routerLink="/login">Logout</button>
       </div>
     </div>
-    <h2 style="color: red">Parent Todos</h2>
-    <h4>Add New Parent Todo</h4>
+
+    <h2 style="color: blue">Child Todos</h2>
+    <h4>Add New Child Todo</h4>
     <form>
+      <select
+        name="parentTodo"
+        style="margin-right: 10px"
+        [(ngModel)]="parentId"
+        (change)="onParentChange()"
+      >
+        <option *ngFor="let o of parentTodoList" value="{{ o.id }}">
+          {{ o.parentName }}
+        </option>
+      </select>
       <input
         type="text"
         id="todo"
@@ -50,16 +61,22 @@
   <br />
 
   <div class="card">
-    <h4>Parent Todo List</h4>
+    <h4>Todo List</h4>
     <ul>
-      <li *ngFor="let t of todoList" id="{{ t.id }}" style="display: flex">
+      <li
+        *ngFor="let t of todoList"
+        id="{{ t.id }}"
+        style="display: flex; height: 25px"
+      >
         <p
           [ngStyle]="{
             width: '300px',
             'text-decoration': t.isComplete ? 'line-through' : 'none'
           }"
         >
-          {{ t.name | titlecase }}
+          {{ t.name | titlecase }} ({{
+            parentTodoKeyValue[t.todoParentId] | titlecase
+          }})
         </p>
 
         <div style="width: 100px">

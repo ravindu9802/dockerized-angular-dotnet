@@ -5,22 +5,26 @@ import { RouterModule } from '@angular/router';
 import { CrudService } from '../../core/services/crud.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-child',
   standalone: true,
   imports: [FormsModule, CommonModule, RouterModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: './child.component.html',
+  styleUrl: './child.component.css',
 })
-export class HomeComponent {
+export class ChildComponent {
   private todoService = inject(CrudService);
 
   todo: string = '';
   editTodo: any = {};
   todoList: any = [];
+  parentTodoList: any = [];
   isEdit: boolean = false;
+  parentId: number = 0;
+  parentTodoKeyValue: any = {};
 
   ngOnInit() {
     this.fetchTodos();
+    this.fetchParentTodos();
   }
 
   fetchTodos() {
@@ -33,9 +37,22 @@ export class HomeComponent {
     });
   }
 
+  fetchParentTodos() {
+    this.todoService.getAllParentTodos().subscribe({
+      next: (res: any) => {
+        this.parentTodoList = res;
+        this.parentTodoList.forEach((p: any) => {
+          this.parentTodoKeyValue[p.id] = p.parentName;
+        });
+      },
+      error: (e) => console.error(e),
+      complete: () => console.info('getAllParentTodos complete'),
+    });
+  }
+
   onAdd() {
     if (this.todo) {
-      this.todoService.createTodo(this.todo, false, 0).subscribe({
+      this.todoService.createTodo(this.todo, false, this.parentId).subscribe({
         next: (res: any) => {
           this.todo = '';
           this.fetchTodos();
@@ -50,11 +67,12 @@ export class HomeComponent {
     this.todo = todo.name;
     this.editTodo = todo;
     this.isEdit = true;
+    this.parentId = todo.todoParentId;
   }
 
   toggleStatus(todo: any) {
     this.todoService
-      .updateTodo(todo.id, todo.name, !todo.isComplete, 0)
+      .updateTodo(todo.id, todo.name, !todo.isComplete, this.parentId)
       .subscribe({
         next: (res: any) => {
           for (let i = 0; i < this.todoList.length; i++) {
@@ -72,7 +90,12 @@ export class HomeComponent {
 
   onSave() {
     this.todoService
-      .updateTodo(this.editTodo.id, this.todo, this.editTodo.isComplete, 0)
+      .updateTodo(
+        this.editTodo.id,
+        this.todo,
+        this.editTodo.isComplete,
+        this.parentId
+      )
       .subscribe({
         next: (res: any) => {
           this.todoList = this.todoList.filter(
@@ -101,5 +124,9 @@ export class HomeComponent {
       error: (e) => console.error(e),
       complete: () => console.info('updateTodo complete'),
     });
+  }
+
+  onParentChange() {
+    console.log(this.parentId);
   }
 }
