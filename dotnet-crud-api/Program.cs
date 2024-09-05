@@ -20,6 +20,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMemoryCache();
+
 // in-memory db
 // builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 
@@ -29,11 +31,11 @@ builder.Services.AddSwaggerGen();
 
 // SQL Server 2022
 // connection string for docker
-var connStr = builder.Configuration.GetConnectionString("TodoDbDocker");
-var password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
-connStr = string.Format(connStr, password);
+// var connStr = builder.Configuration.GetConnectionString("TodoDbDocker");
+// var password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
+// connStr = string.Format(connStr, password);
 // connection string for local
-// var connStr = builder.Configuration.GetConnectionString("TodoDbLocal");
+var connStr = builder.Configuration.GetConnectionString("TodoDbLocal");
 Console.WriteLine(connStr);
 builder.Services.AddSqlServer<TodoDb>(connStr);
 
