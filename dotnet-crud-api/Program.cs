@@ -37,11 +37,11 @@ builder.Services.AddStackExchangeRedisCache(options =>{
 
 // SQL Server 2022
 // connection string for docker
-// var connStr = builder.Configuration.GetConnectionString("TodoDbDocker");
-// var password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
-// connStr = string.Format(connStr, password);
+var connStr = builder.Configuration.GetConnectionString("TodoDbDocker");
+var password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
+connStr = string.Format(connStr!, password);
 // connection string for local
-var connStr = builder.Configuration.GetConnectionString("TodoDbLocal");
+// var connStr = builder.Configuration.GetConnectionString("TodoDbLocal");
 Console.WriteLine(connStr);
 builder.Services.AddSqlServer<TodoDb>(connStr);
 

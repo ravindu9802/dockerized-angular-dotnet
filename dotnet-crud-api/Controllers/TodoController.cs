@@ -30,9 +30,29 @@ namespace dotnet_crud_api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Todo>> GetAllTodos()
+        public async Task<ActionResult<IEnumerable<Todo>>> GetAllTodos()
         {
-            return Ok(_dbContext.Todos.AsNoTracking().ToArray());
+            string key = $"todo:all";
+            var todos = await _distributedCache.GetStringAsync(key);
+
+            if (string.IsNullOrEmpty(todos))
+            {
+                var result = await _dbContext.Todos.AsNoTracking().ToListAsync();
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1),
+                };
+                await _distributedCache.SetStringAsync(
+                    key,
+                    JsonConvert.SerializeObject(result),
+                    options
+                );
+                Console.WriteLine("no cache hit");
+                return result;
+            }
+            Console.WriteLine("cache hit");
+            return Ok(JsonConvert.SerializeObject(todos));
         }
 
         // [HttpGet("{id}")]
@@ -92,7 +112,7 @@ namespace dotnet_crud_api.Controllers
             t.IsComplete = todo.IsComplete;
             _dbContext.SaveChanges();
 
-                        // update cache
+            // update cache
             string key = $"todo:{todo.Id}";
             await _distributedCache.RemoveAsync(key);
             var options = new DistributedCacheEntryOptions
@@ -113,7 +133,7 @@ namespace dotnet_crud_api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteTodo(int id)
+        public async Task<ActionResult> DeleteTodo(int id)
         {
             var t = _dbContext.Todos.Find(id);
             if (t == null)
@@ -121,6 +141,8 @@ namespace dotnet_crud_api.Controllers
 
             _dbContext.Todos.Remove(t);
             _dbContext.SaveChanges();
+            string key = $"todo:{id}";
+            await _distributedCache.RemoveAsync(key);
             return Ok(t);
         }
     }
