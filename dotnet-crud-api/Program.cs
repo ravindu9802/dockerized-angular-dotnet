@@ -20,7 +20,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// in memory caching
 builder.Services.AddMemoryCache();
+
+// setup redis using Microsoft.Extensions.Caching.StackExchangeRedis
+builder.Services.AddStackExchangeRedisCache(options =>{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
 
 // in-memory db
 // builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
