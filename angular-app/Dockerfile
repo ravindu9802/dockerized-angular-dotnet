@@ -1,6 +1,6 @@
 # STEP 1:
 # build angular app using production config
-FROM node:22.7.0-alpine AS build
+FROM node:22.8.0 AS build
 
 # define working directory
 WORKDIR /app
